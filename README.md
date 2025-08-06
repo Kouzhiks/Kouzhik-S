@@ -13,3 +13,5 @@
 
 <h3 align="left">Badges:</h3>
 <img width="80" height="80" alt="image" src="https://github.com/user-attachments/assets/997f59ed-5404-44cd-9edb-1f69a6c6fdcc" />
+
+![Image](https://github.com/user-attachments/assets/e20fb4b9-5ce9-4e41-b040-55e46f23f94c)
