@@ -1,0 +1,184 @@
+import random
+
+class Board:
+    def __init__(self):
+        self.board = [' ' for _ in range(9)]
+
+    def display(self):
+        print()
+        print(f"| {self.board[0]} | {self.board[1]} | {self.board[2]} |")
+        print("----+---+----")
+        print(f"| {self.board[3]} | {self.board[4]} | {self.board[5]} |")
+        print("----+---+----")
+        print(f"| {self.board[6]} | {self.board[7]} | {self.board[8]} |")
+        print()
+
+    def make_move(self, position, symbol):
+        if 0 <= position < 9 and self.board[position] == ' ':
+            self.board[position] = symbol
+            return True
+        return False
+
+    def is_winner(self, symbol):
+        win_conditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+            [0, 4, 8], [2, 4, 6]              # Diagonals
+        ]
+        for condition in win_conditions:
+            if all(self.board[i] == symbol for i in condition):
+                return True
+        return False
+
+    def is_full(self):
+        return ' ' not in self.board
+
+    def get_available_moves(self):
+        return [i for i, spot in enumerate(self.board) if spot == ' ']
+
+
+class Player:
+    def __init__(self, symbol):
+        self.symbol = symbol
+
+    def get_move(self, board):
+        raise NotImplementedError("Subclasses should implement this method.")
+
+
+class HumanPlayer(Player):
+    def get_move(self, board):
+        while True:
+            try:
+                move = int(input("Enter your move (1-9): ")) - 1
+                if move in board.get_available_moves():
+                    return move
+                else:
+                    print("Invalid move. Try again.")
+            except ValueError:
+                print("Please enter a number between 1 and 9.")
+
+
+class AI(Player):
+    def __init__(self, symbol, difficulty='easy'):
+        super().__init__(symbol)
+        self.difficulty = difficulty
+
+    def get_move(self, board):
+        if self.difficulty == 'easy':
+            return random.choice(board.get_available_moves())
+        elif self.difficulty == 'hard':
+            return self.best_move(board)
+
+    def best_move(self, board):
+        opponent = 'O' if self.symbol == 'X' else 'X'
+
+        def minimax(b, is_maximizing):
+            if b.is_winner(self.symbol):
+                return 1
+            elif b.is_winner(opponent):
+                return -1
+            elif b.is_full():
+                return 0
+
+            if is_maximizing:
+                best_score = float('-inf')
+                for move in b.get_available_moves():
+                    b.make_move(move, self.symbol)
+                    score = minimax(b, False)
+                    b.board[move] = ' '
+                    best_score = max(score, best_score)
+                return best_score
+            else:
+                best_score = float('inf')
+                for move in b.get_available_moves():
+                    b.make_move(move, opponent)
+                    score = minimax(b, True)
+                    b.board[move] = ' '
+                    best_score = min(score, best_score)
+                return best_score
+
+        best_value = float('-inf')
+        move = None
+        for m in board.get_available_moves():
+            board.make_move(m, self.symbol)
+            score = minimax(board, False)
+            board.board[m] = ' '
+            if score > best_value:
+                best_value = score
+                move = m
+        return move
+
+
+class Game:
+    def __init__(self, difficulty='easy'):
+        self.difficulty = difficulty
+
+    def switch_turn(self):
+        self.current_player = self.ai if self.current_player == self.player else self.player
+
+    def setup_game(self):
+        self.board = Board()
+        self.player = HumanPlayer('O')
+        self.ai = AI('X', self.difficulty)
+        self.current_player = self.player
+
+    def play_once(self):
+        self.setup_game()
+        print("\nTic-Tac-Toe (You = O, AI = X)")
+
+        while True:
+            self.board.display()
+            move = self.current_player.get_move(self.board)
+            self.board.make_move(move, self.current_player.symbol)
+
+            if self.board.is_winner(self.current_player.symbol):
+                self.board.display()
+                print("You Win!" if self.current_player == self.player else "AI Wins!")
+                break
+            elif self.board.is_full():
+                self.board.display()
+                print("It's A Draw!")
+                break
+
+            self.switch_turn()
+
+    def play(self):
+        while True:
+            self.play_once()
+            again = input("To Play Again, Press Any Character And To Quit Press \'Q\' :").strip().lower()
+            if again == 'q':
+                rate = input("Rate The Game :\n"
+                      "~Now\n"
+                      "~Later\n"
+                      "~Never :").lower()
+                if rate != 'now':
+                 print("Okay, No Worries! Thanks For Playing!")
+                else:
+                    rating = input("1 Star\n"
+                          "2 Stars\n"
+                          "3 Stars\n"
+                          "4 Stars\n"
+                          "5 Stars\n"
+                          "Give Us Your Rating :").lower()
+                    if rating >= "4 stars" > '3 stars':
+                        print("Thank You Very Much!")
+
+                    elif rating >= '2 stars':
+                        print("Glad You Enjoyed The Game!")
+
+                    elif rating == '1 star':
+                        print("Sorry For Your Dissappointment!")
+
+
+
+                break
+ 
+
+if __name__ == '__main__':
+    difficulty = input("Choose your difficulty [Easy or Hard] : ").strip().lower()
+    if difficulty not in ['easy', 'hard']:
+        print("Invalid choice. Defaulting to 'easy'.")
+        difficulty = 'easy'
+
+    game = Game(difficulty)
+    game.play()
