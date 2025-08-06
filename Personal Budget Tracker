@@ -1,0 +1,77 @@
+import csv
+from datetime import datetime
+
+class Expense:
+    def __init__(self, amount, category, description='', date=None):
+        self.amount = float(amount)
+        self.category = category
+        self.description = description
+        self.date = date if date else datetime.now().strftime('%Y-%m-%d')
+
+    def to_dict(self):
+        return {
+            'date': self.date,
+            'amount': self.amount,
+            'category': self.category,
+            'description': self.description
+        }
+
+
+class Budget:
+    def __init__(self):
+        self.expenses = []
+
+    def add_expense(self, expense: Expense):
+        self.expenses.append(expense)
+
+    def view_by_category(self):
+        summary = {}
+        for exp in self.expenses:
+            summary[exp.category] = summary.get(exp.category, 0) + exp.amount
+        return summary
+
+    def total_spending(self, start_date=None, end_date=None):
+        total = 0
+        for exp in self.expenses:
+            if start_date and exp.date < start_date:
+                continue
+            if end_date and exp.date > end_date:
+                continue
+            total += exp.amount
+        return total
+
+    def save_to_csv(self, filename='Monthlyexpense.csv'):
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=['date', 'amount', 'category', 'description'])
+            writer.writeheader()
+            for exp in self.expenses:
+                writer.writerow(exp.to_dict())
+
+    def load_from_csv(self, filename='Monthlyexpense.csv'):
+        try:
+            with open(filename, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    self.expenses.append(Expense(**row))
+        except FileNotFoundError:
+            print(f"No previous data found in {filename}.")
+
+
+if __name__ == "__main__":
+    budget = Budget()
+    budget.load_from_csv()
+
+
+budget.add_expense(Expense(1200, "Entertainment", "Party"))
+budget.add_expense(Expense(30000, "Purchase", "Car"))
+budget.add_expense(Expense(500, "Transport", "Fuel"))
+budget.add_expense(Expense(3200, "Rent"))
+budget.add_expense(Expense(1200, "Food"))
+budget.add_expense(Expense(100, "Airtime Recharge"))
+print("Spending by category:")
+print(budget.view_by_category())
+
+print("\nTotal spending:")
+print(budget.total_spending())
+
+budget.save_to_csv()
