@@ -13,4 +13,3 @@
 
 <h3 align="left">Badges:</h3>
 <img width="80" height="80" alt="image" src="https://github.com/user-attachments/assets/997f59ed-5404-44cd-9edb-1f69a6c6fdcc" />
-https://media.tenor.com/zBc1XhcbTSoAAAAM/nyan-cat-rainbow.gif
