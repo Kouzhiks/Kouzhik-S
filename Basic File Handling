@@ -1,0 +1,48 @@
+import io
+
+f = open("example.txt", "w")
+f.write("""Yo wassup """)
+f.close()
+with open("example.txt", "r") as file:
+    print(file.read())
+
+
+#TO REWRITE EXISTING DATA:
+f = open("example.txt", "w")
+f.write("new rewritten data!")
+f.close()
+with open('example.txt', 'r') as file:
+    print(file.read())
+
+
+#TO APPEND DATA:
+f = open("example.txt", "a")
+f.write(" + new appended data!")
+f.close()
+with open('example.txt', 'r') as file:
+    print(file.read())
+
+
+# TO OVERWRITE DATA:
+def overwrite_data(filename, start_position, replacement_data):
+    with open(filename, "r+") as f:
+        f.seek(start_position)
+        f.write(replacement_data)
+
+overwrite_data("example.txt", 0, """This 
+is 
+overwritten 
+data 
+finally 
+yay!""")
+with open('example.txt', 'r') as f:
+    print(f.read())
+
+
+#TO GET LINE NUMBER AND CONTENT:
+def read_lines(filepath):
+  with open('example.txt', "r") as f:
+     for line_number, line in enumerate(f, start=1):
+        print(f"Line {line_number}: {line.strip()}")
+
+read_lines('example.txt')
