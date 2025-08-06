@@ -1,0 +1,49 @@
+class Product:
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+    def value(self):
+        return self.price * self.quantity
+
+
+class Inventory:
+    def __init__(self):
+        self.products = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    def remove_product(self, name):
+        self.products = [product for product in self.products if product.name != name]
+
+    def total_value(self):
+        return sum(product.value() for product in self.products)
+
+    def display_inventory(self):
+        if not self.products:
+            print("Inventory Is Empty")
+        else:
+            print("Inventory:")
+            for product in self.products:
+                print(f'Name: {product.name}, Price: ${product.price}, Quantity: {product.quantity}, Value: ${product.value()}')
+
+
+if __name__ == "__main__":
+    store_inventory = Inventory()
+
+    store_inventory.add_product(Product("Apple", 100, 10))
+    store_inventory.add_product(Product("Banana", 70, 20))
+    store_inventory.add_product(Product("Watermelon", 100, 15))
+    store_inventory.add_product(Product("Peach", 200, 20))
+    store_inventory.add_product(Product("Grape", 150, 40))
+
+    store_inventory.display_inventory()
+
+    store_inventory.remove_product("Watermelon")
+
+    print("\nAfter removing 'Watermelon':")
+    store_inventory.display_inventory()
+
+    print(f"\nTotal inventory value: ${store_inventory.total_value():.2f}")
