@@ -1,0 +1,58 @@
+class Employee:
+    def __init__(self, name, position, salary):
+        self.name = name
+        self.position = position
+        self.salary = salary
+    def get_info(self):
+        return f"{self.name}, {self.position}, Salary: ${self.salary}"
+
+
+class Manager(Employee):
+    def __init__(self, name, position, salary):
+        super().__init__(name, position, salary)
+        self.report = []
+
+    def add_report(self, employee):
+        self.report.append(employee)
+
+        print(f"{employee.name} Is reporting to {self.name}.")
+
+    def show_reports(self):
+        if not self.report:
+            print(f'{self.name} has no reports')
+        else:
+            print(f"{self.name}'s reports :")
+            for report in self.report:
+                print(f"-{report.get_info()}")
+
+
+class Developer(Employee):
+    def __init__(self, name, position, salary, programming_language):
+        super().__init__(name, position, salary)
+        self.programming_language = programming_language
+
+    def write_code(self):
+        print(f"{self.name} is developing a code {self.programming_language}.")
+
+
+if __name__ == "__main__":
+ manager = Manager("Henry", "Senior Manager", 200000)
+developer1 = Developer("Timothy", "Developer", 80000, "Python")
+developer2 = Developer("Bobby", "Developer", 92000, "C++, Python")
+developer3 = Developer("Timothy", "Developer", 75000, "Javascript")
+
+
+manager.add_report(developer1)
+manager.add_report(developer2)
+manager.add_report(developer3)
+
+
+print()
+manager.show_reports()
+
+
+developer1.write_code()
+developer2.write_code()
+developer3.write_code()
+
+
