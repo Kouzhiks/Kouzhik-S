@@ -5,7 +5,7 @@
 
 - 📫 You can reach out to me on **Kouzhiksri09@gmail.com**
 
-- Fun Fact: **I started my coding journey in March 2025🗿**
+- Fun Fact: **I started my coding journey in March 2025**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
