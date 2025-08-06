@@ -1,0 +1,88 @@
+import random
+
+def play_match():
+
+    player_score = 0
+    computer_score = 0
+
+    difficulty = input("Choose Your Difficulty:\nEasy\nMedium\nHard : ").strip().capitalize()
+    if difficulty == 'Easy':
+        max_number = 10
+    elif difficulty == 'Medium':
+        max_number = 15
+    elif difficulty == 'Hard':
+        max_number = 20
+    else:
+        print("Invalid difficulty. Defaulting to Easy.")
+        max_number = 10
+        difficulty = 'Easy'
+
+    while player_score < 5 and computer_score < 5:
+        number = random.randint(0, max_number)
+
+        try:
+            guess = int(input(f"Enter a guess between 0 and {max_number}: "))
+        except ValueError:
+            print(f"Invalid input. Please enter an integer between 0 and {max_number}. No points awarded.\n")
+            print(f"Score -> You: {player_score} | Computer: {computer_score}\n")
+            continue
+
+        if not (0 <= guess <= max_number):
+            print(f"Your guess is out of range (0–{max_number}). No points awarded.\n")
+            print(f"Score -> You: {player_score} | Computer: {computer_score}\n")
+            continue
+
+        if guess == number:
+            player_score += 1
+            print("You guessed correctly!")
+        else:
+            computer_score += 1
+            print(f"You guessed incorrectly. The correct number was {number}.")
+
+        print(f"Score -> You: {player_score} | Computer: {computer_score}\n")
+
+    if player_score >= 5:
+        print("Congratulations! You won this match!")
+    else:
+        print("The computer wins this match! Better luck next time!")
+
+    while True:
+        play_again = input("Do you want to play again? (yes/no): ").strip().lower()
+        if play_again in ("yes", "y"):
+            return True
+        elif play_again in ("no", "n"):
+            return False
+        else:
+            print("Please type 'yes' or 'no'.")
+
+# === Main Program ===
+print("=== Welcome to the Number-Guessing Battle: First to 5 Wins! ===")
+
+while True:
+    again = play_match()
+    if not again:
+        rate = input("Rate The Game!\n"
+              "~Now\n"
+              "~Later\n"
+              "~Never :")
+        if rate == "Later" and "Never":
+            print("Okay,No Worries! Thank You For Playing!")
+        else:
+            rating = input("1 Star\n"
+                           "2 Stars\n"
+                           "3 Stars\n"
+                           "4 Stars\n"
+                           "5 Stars\n"
+                           "Give Us Your Rating :").lower()
+            if rating >= "4 stars" > '3 stars':
+                print("Thank You Very Much!")
+
+            elif rating >= '2 stars':
+                print("Glad You Enjoyed The Game!")
+
+            elif rating == '1 star':
+             print("Sorry For Your Dissappointment!")
+
+             break
+    else:
+        print("Starting a new match (scores reset to 0–0) …")
